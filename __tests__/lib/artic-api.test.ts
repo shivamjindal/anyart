@@ -1,4 +1,4 @@
-import { fetchArtworks, searchArtworks, getImageUrl } from '@/lib/api'
+import { fetchArtworks, searchArtworks, getImageUrl } from '@/lib/artic-api'
 
 describe('API Functions', () => {
   beforeEach(() => {
@@ -39,7 +39,12 @@ describe('API Functions', () => {
       const result = await fetchArtworks(1, 12)
 
       expect(global.fetch).toHaveBeenCalledWith(
-        expect.stringContaining('/artworks?page=1&limit=12')
+        expect.stringContaining('/artworks?page=1&limit=12'),
+        expect.objectContaining({
+          headers: expect.objectContaining({
+            'AIC-User-Agent': 'anyart (shivam@anysphere.co)',
+          }),
+        })
       )
       expect(result).toEqual(mockResponse)
       expect(result.data).toHaveLength(1)
@@ -75,7 +80,12 @@ describe('API Functions', () => {
       await fetchArtworks()
 
       expect(global.fetch).toHaveBeenCalledWith(
-        expect.stringContaining('page=1&limit=12')
+        expect.stringContaining('page=1&limit=12'),
+        expect.objectContaining({
+          headers: expect.objectContaining({
+            'AIC-User-Agent': 'anyart (shivam@anysphere.co)',
+          }),
+        })
       )
     })
   })
@@ -110,7 +120,12 @@ describe('API Functions', () => {
       const result = await searchArtworks('cats', 1, 12)
 
       expect(global.fetch).toHaveBeenCalledWith(
-        expect.stringContaining('/artworks/search?q=cats')
+        expect.stringContaining('/artworks/search?q=cats'),
+        expect.objectContaining({
+          headers: expect.objectContaining({
+            'AIC-User-Agent': 'anyart (shivam@anysphere.co)',
+          }),
+        })
       )
       expect(result).toEqual(mockResponse)
       expect(result.data[0].title).toBe('Cat Artwork')
@@ -136,7 +151,12 @@ describe('API Functions', () => {
       await searchArtworks('test & query', 1, 12)
 
       expect(global.fetch).toHaveBeenCalledWith(
-        expect.stringContaining('test%20%26%20query')
+        expect.stringContaining('test%20%26%20query'),
+        expect.objectContaining({
+          headers: expect.objectContaining({
+            'AIC-User-Agent': 'anyart (shivam@anysphere.co)',
+          }),
+        })
       )
     })
 

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { fetchArtworks } from '@/lib/api'
+import { fetchArtworks } from '@/lib/artic-api'
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams

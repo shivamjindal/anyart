@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import { ArtworkGrid } from '@/components/artwork-grid'
-import { Artwork } from '@/lib/api'
+import { Artwork } from '@/lib/artic-api'
 
 describe('ArtworkGrid', () => {
   const mockArtworks: Artwork[] = [

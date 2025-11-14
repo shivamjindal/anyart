@@ -1,4 +1,4 @@
-import { Artwork } from '@/lib/api'
+import { Artwork } from '@/lib/artic-api'
 import { ArtworkCard } from './artwork-card'
 import { Skeleton } from './ui/skeleton'
 

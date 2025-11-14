@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import { Card, CardContent, CardDescription, CardTitle } from '@/components/ui/card'
-import { Artwork, getImageUrl } from '@/lib/api'
+import { Artwork, getImageUrl } from '@/lib/artic-api'
 
 interface ArtworkCardProps {
   artwork: Artwork

@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import { ArtworkCard } from '@/components/artwork-card'
-import { Artwork } from '@/lib/api'
+import { Artwork } from '@/lib/artic-api'
 
 describe('ArtworkCard', () => {
   const mockArtwork: Artwork = {

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { Artwork } from '@/lib/api'
+import { Artwork } from '@/lib/artic-api'
 import { ArtworkGrid } from '@/components/artwork-grid'
 import { Pagination } from '@/components/pagination'
 import { SearchBar } from '@/components/search-bar'

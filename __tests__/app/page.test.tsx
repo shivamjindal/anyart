@@ -1,12 +1,8 @@
 import { render, screen, waitFor, fireEvent } from '@testing-library/react'
 import Home from '@/app/page'
-import * as api from '@/lib/api'
-
-jest.mock('@/lib/api')
 
 describe('Home Page', () => {
-  const mockFetchArtworks = api.fetchArtworks as jest.MockedFunction<typeof api.fetchArtworks>
-  const mockSearchArtworks = api.searchArtworks as jest.MockedFunction<typeof api.searchArtworks>
+  const mockFetch = global.fetch as jest.MockedFunction<typeof fetch>
 
   const mockArtworksResponse = {
     data: [
@@ -38,7 +34,10 @@ describe('Home Page', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
-    mockFetchArtworks.mockResolvedValue(mockArtworksResponse)
+    mockFetch.mockResolvedValue({
+      ok: true,
+      json: async () => mockArtworksResponse,
+    } as Response)
   })
 
   it('should render page title and description', () => {
@@ -60,7 +59,7 @@ describe('Home Page', () => {
     render(<Home />)
 
     await waitFor(() => {
-      expect(mockFetchArtworks).toHaveBeenCalledWith(1)
+      expect(mockFetch).toHaveBeenCalledWith(expect.stringContaining('/api/artworks?page=1'))
     })
 
     await waitFor(() => {
@@ -76,7 +75,11 @@ describe('Home Page', () => {
   })
 
   it('should display error message when fetch fails', async () => {
-    mockFetchArtworks.mockRejectedValueOnce(new Error('Network error'))
+    mockFetch.mockResolvedValueOnce({
+      ok: false,
+      status: 500,
+      json: async () => ({ error: 'Network error' }),
+    } as Response)
 
     render(<Home />)
 
@@ -102,7 +105,13 @@ describe('Home Page', () => {
       ],
     }
     
-    mockSearchArtworks.mockResolvedValue(searchResponse)
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      json: async () => mockArtworksResponse,
+    } as Response).mockResolvedValueOnce({
+      ok: true,
+      json: async () => searchResponse,
+    } as Response)
 
     render(<Home />)
 
@@ -116,7 +125,7 @@ describe('Home Page', () => {
     jest.advanceTimersByTime(500)
 
     await waitFor(() => {
-      expect(mockSearchArtworks).toHaveBeenCalledWith('cats', 1)
+      expect(mockFetch).toHaveBeenCalledWith(expect.stringContaining('/api/artworks/search?q=cats'))
     })
 
     await waitFor(() => {
@@ -138,6 +147,14 @@ describe('Home Page', () => {
   })
 
   it('should change page when pagination is clicked', async () => {
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      json: async () => mockArtworksResponse,
+    } as Response).mockResolvedValueOnce({
+      ok: true,
+      json: async () => mockArtworksResponse,
+    } as Response)
+
     render(<Home />)
 
     await waitFor(() => {
@@ -148,21 +165,24 @@ describe('Home Page', () => {
     fireEvent.click(nextButton)
 
     await waitFor(() => {
-      expect(mockFetchArtworks).toHaveBeenCalledWith(2)
+      expect(mockFetch).toHaveBeenCalledWith(expect.stringContaining('/api/artworks?page=2'))
     })
   })
 
   it('should not render pagination when no artworks', async () => {
-    mockFetchArtworks.mockResolvedValueOnce({
-      data: [],
-      pagination: {
-        total: 0,
-        limit: 12,
-        offset: 0,
-        total_pages: 0,
-        current_page: 1,
-      },
-    })
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({
+        data: [],
+        pagination: {
+          total: 0,
+          limit: 12,
+          offset: 0,
+          total_pages: 0,
+          current_page: 1,
+        },
+      }),
+    } as Response)
 
     render(<Home />)
 
