@@ -49,7 +49,11 @@ export async function fetchArtworks(
   const fields = 'id,title,artist_display,date_display,image_id,thumbnail'
   const url = `${BASE_URL}/artworks?page=${page}&limit=${limit}&fields=${fields}`
 
-  const response = await fetch(url)
+  const response = await fetch(url, {
+    headers: {
+      'AIC-User-Agent': 'anyart (shivam@anysphere.co)',
+    },
+  })
 
   if (!response.ok) {
     throw new Error(`Failed to fetch artworks: ${response.statusText}`)
@@ -74,7 +78,11 @@ export async function searchArtworks(
   const fields = 'id,title,artist_display,date_display,image_id,thumbnail'
   const url = `${BASE_URL}/artworks/search?q=${encodeURIComponent(query)}&page=${page}&limit=${limit}&fields=${fields}`
 
-  const response = await fetch(url)
+  const response = await fetch(url, {
+    headers: {
+      'AIC-User-Agent': 'anyart (shivam@anysphere.co)',
+    },
+  })
 
   if (!response.ok) {
     throw new Error(`Failed to search artworks: ${response.statusText}`)
