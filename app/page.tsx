@@ -1,10 +1,21 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { fetchArtworks, searchArtworks, Artwork } from '@/lib/api'
+import { Artwork } from '@/lib/api'
 import { ArtworkGrid } from '@/components/artwork-grid'
 import { Pagination } from '@/components/pagination'
 import { SearchBar } from '@/components/search-bar'
+
+interface ArtworkResponse {
+  data: Artwork[]
+  pagination: {
+    total: number
+    limit: number
+    offset: number
+    total_pages: number
+    current_page: number
+  }
+}
 
 export default function Home() {
   const [artworks, setArtworks] = useState<Artwork[]>([])
@@ -19,13 +30,21 @@ export default function Home() {
     setError(null)
 
     try {
-      const response = query
-        ? await searchArtworks(query, page)
-        : await fetchArtworks(page)
+      const url = query
+        ? `/api/artworks/search?q=${encodeURIComponent(query)}&page=${page}`
+        : `/api/artworks?page=${page}`
+      
+      const response = await fetch(url)
+      
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Failed to load artworks')
+      }
 
-      setArtworks(response.data)
-      setTotalPages(response.pagination.total_pages)
-      setCurrentPage(response.pagination.current_page)
+      const data: ArtworkResponse = await response.json()
+      setArtworks(data.data)
+      setTotalPages(data.pagination.total_pages)
+      setCurrentPage(data.pagination.current_page)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load artworks')
       setArtworks([])
