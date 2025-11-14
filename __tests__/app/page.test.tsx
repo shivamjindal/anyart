@@ -60,7 +60,7 @@ describe('Home Page', () => {
     render(<Home />)
 
     await waitFor(() => {
-      expect(mockFetchArtworks).toHaveBeenCalledWith(1, '')
+      expect(mockFetchArtworks).toHaveBeenCalledWith(1)
     })
 
     await waitFor(() => {
@@ -148,7 +148,7 @@ describe('Home Page', () => {
     fireEvent.click(nextButton)
 
     await waitFor(() => {
-      expect(mockFetchArtworks).toHaveBeenCalledWith(2, '')
+      expect(mockFetchArtworks).toHaveBeenCalledWith(2)
     })
   })
 
