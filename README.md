@@ -9,6 +9,7 @@ An art gallery website showcasing artworks from the Art Institute of Chicago.
 - Responsive design with modern UI
 - Pagination for easy navigation
 
+
 ## Tech Stack
 
 - Next.js 15
