@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server"
+import { Prisma } from "@prisma/client"
 import { prisma } from "@/lib/prisma"
 import { applyFingerprintCookie, getOrCreateFingerprint } from "@/lib/fingerprint"
 
@@ -29,12 +30,17 @@ export async function POST(_req: Request, context: RouteContext) {
         data: { votes: { increment: 1 } },
       })
     })
-  } catch {
-    // Unique constraint: already voted
-    return NextResponse.json(
-      { error: "You have already voted for this idea", code: "ALREADY_VOTED" },
-      { status: 409 },
-    )
+  } catch (error) {
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === "P2002"
+    ) {
+      return NextResponse.json(
+        { error: "You have already voted for this idea", code: "ALREADY_VOTED" },
+        { status: 409 },
+      )
+    }
+    throw error
   }
 
   const full = await prisma.idea.findUnique({ where: { id } })
