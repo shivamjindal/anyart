@@ -1,10 +1,13 @@
 'use client'
 
+import Link from 'next/link'
 import { useState, useEffect, useCallback } from 'react'
 import { Artwork } from '@/lib/artic-api'
 import { ArtworkGrid } from '@/components/artwork-grid'
 import { Pagination } from '@/components/pagination'
 import { SearchBar } from '@/components/search-bar'
+import { buttonVariants } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
 
 interface ArtworkResponse {
   data: Artwork[]
@@ -72,9 +75,20 @@ export default function Home() {
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
           <h1 className="text-4xl font-bold mb-2 text-center">AnyArt Gallery</h1>
-          <p className="text-muted-foreground text-center mb-6">
+          <p className="text-muted-foreground text-center mb-2">
             Explore artworks from the Art Institute of Chicago
           </p>
+          <div className="flex justify-center mb-6">
+            <Link
+              href="/ideas"
+              className={cn(
+                buttonVariants({ variant: 'default', size: 'lg' }),
+                'text-base font-semibold shadow-md hover:shadow-lg transition-shadow'
+              )}
+            >
+              Suggest a feature
+            </Link>
+          </div>
           <div className="flex justify-center">
             <SearchBar onSearch={handleSearch} />
           </div>

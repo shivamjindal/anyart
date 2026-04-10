@@ -19,7 +19,9 @@ const customJestConfig = {
     '!**/*.d.ts',
     '!**/node_modules/**',
     '!**/.next/**',
+    '!**/demo_anyart_admin/**',
   ],
+  testPathIgnorePatterns: ['/node_modules/', '/.next/', '/demo_anyart_admin/'],
 }
 
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async

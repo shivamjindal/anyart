@@ -1,0 +1,13 @@
+---
+description: Conventions for the AnyArt demo pipeline (gallery + ideas + Prisma)
+globs: app/**/*.{ts,tsx},lib/**/*.{ts,tsx},components/**/*.{ts,tsx},prisma/**/*
+---
+
+# AnyArt demo
+
+- **Stack**: Next.js App Router, TypeScript strict, Tailwind, ShadCN-style UI in `components/ui/`.
+- **Data**: Postgres via Prisma (`prisma/schema.prisma`). Prefer extending the schema + migrations for new persisted features.
+- **API routes**: Follow existing patterns in `app/api/artworks/` and `app/api/ideas/` — validate input, return JSON `{ data }` or `{ error }`, use `dynamic = "force-dynamic"` when reading the DB.
+- **External API**: Art Institute of Chicago client lives in `lib/artic-api.ts`; keep the `AIC-User-Agent` header.
+- **Tests**: Jest + RTL; add or extend tests in `__tests__/` when changing APIs or UI components.
+- **Admin app**: Presenter-only UI lives in `demo_anyart_admin/` (separate Next app, same `DATABASE_URL`).
