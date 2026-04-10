@@ -19,11 +19,12 @@ npm test -- --coverage
 
 The test suite covers:
 
-### API Functions (`__tests__/lib/api.test.ts`)
+### API / lib (`__tests__/lib/artic-api.test.ts`, `__tests__/lib/claude.test.ts`)
 - Fetching artworks from the API
 - Searching artworks with queries
 - Generating image URLs
 - Error handling for failed requests
+- Claude idea expansion (mocked Anthropic API)
 
 ### Components
 - **ArtworkCard** (`__tests__/components/artwork-card.test.tsx`)
@@ -35,6 +36,9 @@ The test suite covers:
   - Rendering multiple artworks
   - Loading states with skeletons
   - Empty state handling
+
+- **IdeaForm** (`__tests__/components/idea-form.test.tsx`)
+  - Submitting a raw idea to `/api/ideas`
 
 - **Pagination** (`__tests__/components/pagination.test.tsx`)
   - Navigation controls

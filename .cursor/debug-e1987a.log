@@ -1,0 +1,2 @@
+{"sessionId":"e1987a","location":"lib/claude.ts:expandIdea:preFetch","message":"anthropic request model resolution","data":{"resolvedModel":"claude-haiku-4-5","envModelSet":false},"timestamp":1775838293884,"hypothesisId":"H1"}
+{"sessionId":"e1987a","location":"lib/claude.ts:expandIdea:afterFetch","message":"anthropic response status","data":{"status":200,"ok":true},"timestamp":1775838295408,"hypothesisId":"H1"}
