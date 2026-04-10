@@ -67,6 +67,12 @@ npm test
 
 See [TESTING.md](./TESTING.md).
 
+## Production migrations (CI)
+
+Merges to `main` that touch `prisma/migrations/**` run [`.github/workflows/migrate.yml`](.github/workflows/migrate.yml), which executes `npx prisma migrate deploy`.
+
+Add a repository secret **`DATABASE_URL`** (your Neon connection string) under **Settings → Secrets and variables → Actions** so the workflow can reach production.
+
 ## APIs
 
 - **Art Institute of Chicago** — [API docs](https://api.artic.edu/docs/) (proxied via `app/api/artworks/`)
