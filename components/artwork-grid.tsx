@@ -5,9 +5,18 @@ import { Skeleton } from './ui/skeleton'
 interface ArtworkGridProps {
   artworks: Artwork[]
   isLoading?: boolean
+  favoriteIds?: Set<number>
+  onFavoriteToggle?: (artwork: Artwork) => void
+  emptyMessage?: string
 }
 
-export function ArtworkGrid({ artworks, isLoading = false }: ArtworkGridProps) {
+export function ArtworkGrid({
+  artworks,
+  isLoading = false,
+  favoriteIds,
+  onFavoriteToggle,
+  emptyMessage = 'No artworks found',
+}: ArtworkGridProps) {
   if (isLoading) {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -25,7 +34,7 @@ export function ArtworkGrid({ artworks, isLoading = false }: ArtworkGridProps) {
   if (artworks.length === 0) {
     return (
       <div className="text-center py-12">
-        <p className="text-muted-foreground text-lg">No artworks found</p>
+        <p className="text-muted-foreground text-lg">{emptyMessage}</p>
       </div>
     )
   }
@@ -33,7 +42,12 @@ export function ArtworkGrid({ artworks, isLoading = false }: ArtworkGridProps) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
       {artworks.map((artwork) => (
-        <ArtworkCard key={artwork.id} artwork={artwork} />
+        <ArtworkCard
+          key={artwork.id}
+          artwork={artwork}
+          isFavorite={favoriteIds?.has(artwork.id)}
+          onFavoriteToggle={onFavoriteToggle}
+        />
       ))}
     </div>
   )

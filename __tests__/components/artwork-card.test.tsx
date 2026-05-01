@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, fireEvent } from '@testing-library/react'
 import { ArtworkCard } from '@/components/artwork-card'
 import { Artwork } from '@/lib/artic-api'
 
@@ -51,6 +51,37 @@ describe('ArtworkCard', () => {
     render(<ArtworkCard artwork={artworkNoDate} />)
 
     expect(screen.getByText('Date Unknown')).toBeInTheDocument()
+  })
+
+  it('should not render favorite button without handler', () => {
+    render(<ArtworkCard artwork={mockArtwork} />)
+    expect(screen.queryByRole('button', { name: /favorite/i })).not.toBeInTheDocument()
+  })
+
+  it('should toggle favorite via button', () => {
+    const onFavoriteToggle = jest.fn()
+    render(
+      <ArtworkCard
+        artwork={mockArtwork}
+        onFavoriteToggle={onFavoriteToggle}
+        isFavorite={false}
+      />
+    )
+    fireEvent.click(screen.getByRole('button', { name: /add to favorites/i }))
+    expect(onFavoriteToggle).toHaveBeenCalledWith(mockArtwork)
+  })
+
+  it('should show remove label when favorited', () => {
+    render(
+      <ArtworkCard
+        artwork={mockArtwork}
+        onFavoriteToggle={jest.fn()}
+        isFavorite={true}
+      />
+    )
+    expect(
+      screen.getByRole('button', { name: /remove from favorites/i })
+    ).toBeInTheDocument()
   })
 })
 

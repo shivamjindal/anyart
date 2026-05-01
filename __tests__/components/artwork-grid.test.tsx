@@ -44,6 +44,17 @@ describe('ArtworkGrid', () => {
     expect(screen.getByText('No artworks found')).toBeInTheDocument()
   })
 
+  it('should show custom empty message when provided', () => {
+    render(
+      <ArtworkGrid
+        artworks={[]}
+        isLoading={false}
+        emptyMessage="Nothing here"
+      />
+    )
+    expect(screen.getByText('Nothing here')).toBeInTheDocument()
+  })
+
   it('should not show loading skeletons when isLoading is false', () => {
     const { container } = render(<ArtworkGrid artworks={mockArtworks} isLoading={false} />)
 

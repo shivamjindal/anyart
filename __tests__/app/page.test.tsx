@@ -1,5 +1,10 @@
 import { render, screen, waitFor, fireEvent } from '@testing-library/react'
 import Home from '@/app/page'
+import {
+  FAVORITE_ARTWORKS_STORAGE_KEY,
+  artworkToStored,
+} from '@/lib/favorite-artworks'
+import type { Artwork } from '@/lib/artic-api'
 
 describe('Home Page', () => {
   const mockFetch = global.fetch as jest.MockedFunction<typeof fetch>
@@ -34,6 +39,7 @@ describe('Home Page', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
+    window.localStorage.clear()
     mockFetch.mockResolvedValue({
       ok: true,
       json: async () => mockArtworksResponse,
@@ -166,6 +172,47 @@ describe('Home Page', () => {
 
     await waitFor(() => {
       expect(mockFetch).toHaveBeenCalledWith(expect.stringContaining('/api/artworks?page=2'))
+    })
+  })
+
+  it('should show browse and favorites tabs', () => {
+    render(<Home />)
+
+    expect(screen.getByRole('button', { name: /browse gallery/i })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /my favorites/i })).toBeInTheDocument()
+  })
+
+  it('should list favorites from localStorage', async () => {
+    const fav: Artwork = mockArtworksResponse.data[0] as Artwork
+    window.localStorage.setItem(
+      FAVORITE_ARTWORKS_STORAGE_KEY,
+      JSON.stringify([artworkToStored(fav)])
+    )
+
+    render(<Home />)
+
+    fireEvent.click(screen.getByRole('button', { name: /my favorites/i }))
+
+    await waitFor(() => {
+      expect(screen.getByText('Test Artwork 1')).toBeInTheDocument()
+    })
+  })
+
+  it('should save favorite to localStorage when heart is clicked', async () => {
+    render(<Home />)
+
+    await waitFor(() => {
+      expect(screen.getByText('Test Artwork 1')).toBeInTheDocument()
+    })
+
+    const hearts = screen.getAllByRole('button', { name: /add to favorites/i })
+    fireEvent.click(hearts[0])
+
+    await waitFor(() => {
+      const raw = window.localStorage.getItem(FAVORITE_ARTWORKS_STORAGE_KEY)
+      expect(raw).toBeTruthy()
+      const parsed = JSON.parse(raw!)
+      expect(parsed.some((x: { id: number }) => x.id === 1)).toBe(true)
     })
   })
 
