@@ -1,12 +1,20 @@
 import Image from 'next/image'
+import { Heart } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 import { Artwork, getImageUrl } from '@/lib/artic-api'
 
 interface ArtworkCardProps {
   artwork: Artwork
+  isFavorite?: boolean
+  onFavoriteToggle?: (artwork: Artwork) => void
 }
 
-export function ArtworkCard({ artwork }: ArtworkCardProps) {
+export function ArtworkCard({
+  artwork,
+  isFavorite = false,
+  onFavoriteToggle,
+}: ArtworkCardProps) {
   const imageUrl = artwork.image_id 
     ? getImageUrl(artwork.image_id, 400) 
     : '/placeholder.jpg'
@@ -28,6 +36,22 @@ export function ArtworkCard({ artwork }: ArtworkCardProps) {
             No Image Available
           </div>
         )}
+        {onFavoriteToggle ? (
+          <Button
+            type="button"
+            variant="secondary"
+            size="icon"
+            className="absolute right-2 top-2 h-9 w-9 rounded-full bg-background/90 shadow-md hover:bg-background"
+            aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+            aria-pressed={isFavorite}
+            onClick={() => onFavoriteToggle(artwork)}
+          >
+            <Heart
+              className={`h-4 w-4 ${isFavorite ? 'fill-primary text-primary' : ''}`}
+              aria-hidden
+            />
+          </Button>
+        ) : null}
       </div>
       <CardContent className="p-4">
         <CardTitle className="text-lg line-clamp-2 mb-2">
